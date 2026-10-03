@@ -1,0 +1,12 @@
+[
+  {"name": "overview",   "prompt": "Describe what this project does and how it is structured. Be brief."},
+  {"name": "todos",      "prompt": "List every TODO/FIXME comment in this repo with file and line."},
+  {"name": "bugs",       "prompt": "Find the most likely bug in this codebase and explain it."},
+  {"name": "tests",      "prompt": "Which important code paths have no tests? List the top 5."},
+  {"name": "security",   "prompt": "Review this repo for security issues (secrets, injection, unsafe input)."},
+  {"name": "deps",       "prompt": "List the project's dependencies and flag any that look outdated or unused."},
+  {"name": "docs",       "prompt": "What is missing from the README for a new contributor? List gaps."},
+  {"name": "perf",       "prompt": "Point out the most likely performance hotspot and why."},
+  {"name": "style",      "prompt": "Summarize the code style conventions used here in 5 bullets."},
+  {"name": "next-steps", "prompt": "Propose the 3 highest-value next changes for this repo."}
+]
