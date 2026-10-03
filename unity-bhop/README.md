@@ -34,7 +34,7 @@ Defaults are Source engine values scaled to meters. Read `Velocity`, `Horizontal
 
 ## X-Ray Vision
 
-Press **X** to see enemies through walls for 5 s, then a 3 s cooldown. Only the parts hidden behind geometry glow; visible parts render normally.
+Always on by default (`alwaysOn`). Untick it to use **X** as a toggle: 5 s active, then a 3 s cooldown. Only the parts hidden behind geometry glow; visible parts render normally.
 
 1. Copy `XRay.shader`, `XRayVision.cs`, `XRayTarget.cs` into `Assets/`.
 2. Add **XRayVision** to `Player` and assign `XRay.shader` to its `xrayShader` field (required for builds).
@@ -42,6 +42,7 @@ Press **X** to see enemies through walls for 5 s, then a 3 s cooldown. Only the 
 
 | Field | Effect |
 |---|---|
+| `alwaysOn` | On 24/7; ignores key, duration, cooldown |
 | `duration` | Seconds active; 0 = until toggled off |
 | `cooldown` | Seconds before reuse |
 | `range` | Reveal distance; 0 = unlimited |

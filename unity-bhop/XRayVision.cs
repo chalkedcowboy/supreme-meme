@@ -16,6 +16,8 @@ public class XRayVision : MonoBehaviour
 #else
     public KeyCode toggleKey = KeyCode.X;
 #endif
+    [Tooltip("Permanently active: ignores the toggle key, duration and cooldown.")]
+    public bool alwaysOn = true;
     [Tooltip("Seconds the ability lasts. 0 = until toggled off.")]
     public float duration = 5f;
     [Tooltip("Seconds before it can be used again after it ends.")]
@@ -44,16 +46,24 @@ public class XRayVision : MonoBehaviour
 
     void Update()
     {
-        CooldownLeft = Mathf.Max(CooldownLeft - Time.deltaTime, 0f);
-        if (TogglePressed())
+        if (alwaysOn)
         {
-            if (Active) SetActive(false);
-            else if (CooldownLeft <= 0f) SetActive(true);
+            Active = true;
+            CooldownLeft = 0f;
         }
-        if (Active && duration > 0f)
+        else
         {
-            TimeLeft -= Time.deltaTime;
-            if (TimeLeft <= 0f) SetActive(false);
+            CooldownLeft = Mathf.Max(CooldownLeft - Time.deltaTime, 0f);
+            if (TogglePressed())
+            {
+                if (Active) SetActive(false);
+                else if (CooldownLeft <= 0f) SetActive(true);
+            }
+            if (Active && duration > 0f)
+            {
+                TimeLeft -= Time.deltaTime;
+                if (TimeLeft <= 0f) SetActive(false);
+            }
         }
 
         float rangeSqr = range * range;
@@ -89,7 +99,7 @@ public class XRayVision : MonoBehaviour
     void OnGUI()
     {
         if (!showStatus) return;
-        string status = Active ? (duration > 0f ? $"X-Ray: {TimeLeft:F1}s" : "X-Ray: ON")
+        string status = Active ? (!alwaysOn && duration > 0f ? $"X-Ray: {TimeLeft:F1}s" : "X-Ray: ON")
             : CooldownLeft > 0f ? $"X-Ray: cooldown {CooldownLeft:F1}s"
             : $"X-Ray: ready [{toggleKey}]";
         GUI.Label(new Rect(10, 30, 250, 25), status);
