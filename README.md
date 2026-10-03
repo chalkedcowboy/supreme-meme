@@ -17,7 +17,7 @@ Ctrl-C stops all agents. Logs land in `runs/<timestamp>/` (`results.md`, `run.js
 |---|---|
 | `-m, --model` | model alias/ID (default `$AGENT_WALL_MODEL` or `opus`) |
 | `-p, --parallel` | max agents running at once |
-| `--permission-mode` | e.g. `acceptEdits`, `bypassPermissions`, `plan` |
+| `--permission-mode` | default `acceptEdits` (or `$AGENT_WALL_PERMISSION_MODE`); `bypassPermissions`, `plan`, or `''` to omit |
 | `--claude-args` | extra `claude` flags, e.g. `"--allowedTools 'Read Grep'"` |
 | `--cols` | fixed grid columns |
 | `--plain` | no grid; print status changes (auto when not a TTY) |

@@ -412,7 +412,8 @@ def parse_args(argv=None):
     p.add_argument("-p", "--parallel", type=int, default=0, help="max agents running at once (default: all)")
     p.add_argument("-m", "--model", default=os.environ.get("AGENT_WALL_MODEL", "opus"),
                    help="model alias or ID passed to claude (default: $AGENT_WALL_MODEL or 'opus')")
-    p.add_argument("--permission-mode", help="passed to claude, e.g. acceptEdits, bypassPermissions, plan")
+    p.add_argument("--permission-mode", default=os.environ.get("AGENT_WALL_PERMISSION_MODE", "acceptEdits"),
+                   help="passed to claude (default: $AGENT_WALL_PERMISSION_MODE or acceptEdits; '' to omit)")
     p.add_argument("--claude-args", default="", help="extra args for claude, e.g. \"--allowedTools 'Read Grep'\"")
     p.add_argument("--claude-bin", default=os.environ.get("CLAUDE_BIN", "claude"))
     p.add_argument("--cwd", help="working directory for all agents")
