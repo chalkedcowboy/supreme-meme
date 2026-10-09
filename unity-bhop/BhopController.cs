@@ -42,6 +42,9 @@ public class BhopController : MonoBehaviour
     public float HorizontalSpeed => new Vector3(velocity.x, 0f, velocity.z).magnitude;
     public bool IsGrounded => grounded;
 
+    /// <summary>Adds an instant velocity change (dashes, knockback).</summary>
+    public void AddVelocity(Vector3 delta) => velocity += delta;
+
     CharacterController cc;
     Vector3 velocity;
     float pitch;
