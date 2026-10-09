@@ -6,8 +6,10 @@ Playable slice: hunter vs one beast. Copy this folder into `Assets/` of any Unit
 |---|---|
 | WASD / mouse | move / look |
 | LMB | attack (landing hits regains yellow rally health) |
-| Space | quickstep (i-frames) |
+| RMB | pistol: shoot the beast mid-windup to stagger it (yellow), then LMB for a visceral attack |
+| Space | quickstep (i-frames, costs stamina) |
+| F | blood vial (5) |
 | Q | lock-on |
 | R | restart |
 
-The beast telegraphs attacks by turning red; quickstep through the strike.
+Attacks and dodges cost stamina (green bar). The beast telegraphs attacks by turning red; quickstep through the strike.

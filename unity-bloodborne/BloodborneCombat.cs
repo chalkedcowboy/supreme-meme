@@ -62,6 +62,8 @@ public class BloodborneCombat : MonoBehaviour
         Health = Mathf.Min(maxHealth, Health + heal);
     }
 
+    public void Heal(float amount) { if (Health > 0f) Health = Mathf.Min(maxHealth, Health + amount); }
+
     public bool Quickstep(Vector3 direction)
     {
         if (Time.time < nextStep) return false;

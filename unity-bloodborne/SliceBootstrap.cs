@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 /// <summary>
 /// Drop this on nothing: it auto-builds the arena, player, camera, enemy and HUD
 /// on play in any scene. Controls: WASD move, mouse look, LMB attack,
-/// Space quickstep, Q lock-on, R restart.
+/// Space quickstep, RMB pistol, F vial, Q lock-on, R restart.
 /// </summary>
 public class SliceBootstrap : MonoBehaviour
 {
@@ -62,9 +62,13 @@ public class SliceBootstrap : MonoBehaviour
         big ??= new GUIStyle(GUI.skin.label) { fontSize = 48, alignment = TextAnchor.MiddleCenter, normal = { textColor = Color.white } };
         var c = player.Combat;
         Bar(new Rect(20, 20, 300, 18), c.Health / c.maxHealth, new Color(0.7f, 0.1f, 0.1f), c.Rally / c.maxHealth, new Color(1f, 0.8f, 0.2f));
+        GUI.color = new Color(0, 0, 0, 0.7f); GUI.DrawTexture(new Rect(20, 42, 240, 10), Texture2D.whiteTexture);
+        GUI.color = new Color(0.3f, 0.8f, 0.3f); GUI.DrawTexture(new Rect(20, 42, 240 * player.Stamina / player.maxStamina, 10), Texture2D.whiteTexture);
+        GUI.color = Color.white;
+        GUI.Label(new Rect(20, 56, 300, 22), $"Blood vials: {player.vials}  [F]");
         foreach (var e in enemies)
             if (e && e.Alive) { Bar(new Rect(Screen.width / 2 - 200, Screen.height - 40, 400, 14), e.Health / e.Max, new Color(0.6f, 0.15f, 0.15f), 0, Color.clear); break; }
-        GUI.Label(new Rect(20, 44, 400, 22), "WASD move | LMB attack | Space quickstep | Q lock-on | R restart");
+        GUI.Label(new Rect(20, 76, 600, 22), "WASD move | LMB attack | RMB pistol | Space quickstep | F vial | Q lock-on | R restart");
         var cr = new Rect(0, 0, Screen.width, Screen.height);
         if (c.Health <= 0f) { big.normal.textColor = new Color(0.8f, 0.1f, 0.1f); GUI.Label(cr, "YOU DIED\nR to restart", big); }
         else if (enemies.Length == 0) { big.normal.textColor = new Color(0.9f, 0.8f, 0.3f); GUI.Label(cr, "PREY SLAUGHTERED", big); }

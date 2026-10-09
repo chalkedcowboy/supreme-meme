@@ -13,6 +13,8 @@ public static class SliceInput
     public static Vector2 Look() => Mouse.current != null ? Mouse.current.delta.ReadValue() * 0.1f : Vector2.zero;
     public static bool Attack() => Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame;
     public static bool Dodge() => KD(Key.Space);
+    public static bool Fire() => Mouse.current != null && Mouse.current.rightButton.wasPressedThisFrame;
+    public static bool Heal() => KD(Key.F);
     public static bool LockOn() => KD(Key.Q);
     public static bool Restart() => KD(Key.R);
 #else
@@ -20,6 +22,8 @@ public static class SliceInput
     public static Vector2 Look() => new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y")) * 2f;
     public static bool Attack() => Input.GetMouseButtonDown(0);
     public static bool Dodge() => Input.GetKeyDown(KeyCode.Space);
+    public static bool Fire() => Input.GetMouseButtonDown(1);
+    public static bool Heal() => Input.GetKeyDown(KeyCode.F);
     public static bool LockOn() => Input.GetKeyDown(KeyCode.Q);
     public static bool Restart() => Input.GetKeyDown(KeyCode.R);
 #endif

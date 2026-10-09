@@ -9,8 +9,10 @@ public class SliceEnemy : MonoBehaviour
     public float Health { get; private set; }
     public bool Alive => Health > 0f;
     public float Max => maxHealth;
+    public bool Staggered => state == S.Stagger;
+    public bool Winding => state == S.Windup;
 
-    enum S { Chase, Windup, Recover }
+    enum S { Chase, Windup, Recover, Stagger }
     S state; float until;
     SlicePlayer player;
     Renderer rend;
@@ -46,6 +48,10 @@ public class SliceEnemy : MonoBehaviour
                     state = S.Recover; until = Time.time + recovery;
                 }
                 break;
+            case S.Stagger:
+                rend.material.color = Color.yellow;
+                if (Time.time >= until) state = S.Chase;
+                break;
             case S.Recover:
                 rend.material.color = baseColor;
                 if (Time.time >= until) state = S.Chase;
@@ -53,10 +59,12 @@ public class SliceEnemy : MonoBehaviour
         }
     }
 
+    public void Stagger(float time) { state = S.Stagger; until = Time.time + time; }
+
     public void TakeHit(float dmg)
     {
         Health -= dmg;
-        state = S.Recover; until = Time.time + 0.4f;
+        if (state != S.Stagger) { state = S.Recover; until = Time.time + 0.4f; }
         if (!Alive) Destroy(gameObject, 0.3f);
     }
 }
