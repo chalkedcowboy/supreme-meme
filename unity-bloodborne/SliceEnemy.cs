@@ -5,6 +5,12 @@ public class SliceEnemy : MonoBehaviour
 {
     public float maxHealth = 120f, speed = 3.5f, range = 2.6f, damage = 30f;
     public float windup = 0.7f, recovery = 1.2f;
+    [Tooltip("Health fraction below which the enemy enrages (0 = never).")]
+    public float enrageAt = 0f;
+    public int echoes = 50;
+
+    public static int Echoes;
+    public bool Enraged { get; private set; }
 
     public float Health { get; private set; }
     public bool Alive => Health > 0f;
@@ -29,6 +35,11 @@ public class SliceEnemy : MonoBehaviour
     void Update()
     {
         if (!Alive || !player || player.Combat.Health <= 0f) return;
+        if (!Enraged && enrageAt > 0f && Health <= maxHealth * enrageAt)
+        {
+            Enraged = true; speed *= 1.5f; windup *= 0.6f; recovery *= 0.6f; damage *= 1.25f;
+            baseColor = new Color(0.55f, 0.1f, 0.35f);
+        }
         var to = player.transform.position - transform.position; to.y = 0;
         if (to.sqrMagnitude > 0.01f)
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(to), 6f * Time.deltaTime);
@@ -65,6 +76,6 @@ public class SliceEnemy : MonoBehaviour
     {
         Health -= dmg;
         if (state != S.Stagger) { state = S.Recover; until = Time.time + 0.4f; }
-        if (!Alive) Destroy(gameObject, 0.3f);
+        if (!Alive) { Echoes += echoes; Destroy(gameObject, 0.3f); }
     }
 }

@@ -11,12 +11,14 @@ public class SliceBootstrap : MonoBehaviour
     SlicePlayer player;
     SliceEnemy[] enemies;
     GUIStyle big;
+    int wave;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     static void Init() => new GameObject("Slice").AddComponent<SliceBootstrap>();
 
     void Start()
     {
+        SliceEnemy.Echoes = 0;
         var floor = GameObject.CreatePrimitive(PrimitiveType.Plane);
         floor.transform.localScale = new Vector3(5, 1, 5);
         floor.GetComponent<Renderer>().material.color = new Color(0.15f, 0.13f, 0.14f);
@@ -42,18 +44,44 @@ public class SliceBootstrap : MonoBehaviour
         p.AddComponent<BloodborneCombat>();
         player = p.AddComponent<SlicePlayer>();
 
+        SpawnHounds();
+    }
+
+    SliceEnemy Spawn(string name, Vector3 pos, Vector3 scale, Color color)
+    {
         var e = GameObject.CreatePrimitive(PrimitiveType.Capsule);
-        e.name = "Beast";
-        e.transform.position = new Vector3(0, 1.5f, 8);
-        e.transform.localScale = new Vector3(1.6f, 1.5f, 1.6f);
-        e.GetComponent<Renderer>().material.color = new Color(0.4f, 0.25f, 0.2f);
-        e.AddComponent<SliceEnemy>();
+        e.name = name;
+        e.transform.position = pos;
+        e.transform.localScale = scale;
+        e.GetComponent<Renderer>().material.color = color;
+        return e.AddComponent<SliceEnemy>();
+    }
+
+    // Wave 1: fast, fragile hounds. Wave 2: the beast, which enrages at half health.
+    void SpawnHounds()
+    {
+        wave = 1;
+        for (int i = 0; i < 3; i++)
+        {
+            var h = Spawn("Hound", new Vector3((i - 1) * 4f, 0.8f, 10f), new Vector3(0.8f, 0.7f, 1.1f), new Color(0.3f, 0.3f, 0.25f));
+            h.maxHealth = 40f; h.speed = 6f; h.range = 1.8f; h.damage = 12f; h.windup = 0.4f; h.recovery = 0.8f; h.echoes = 30;
+        }
+    }
+
+    void SpawnBeast()
+    {
+        wave = 2;
+        var b = Spawn("Beast", new Vector3(0, 1.5f, 10), new Vector3(1.6f, 1.5f, 1.6f), new Color(0.4f, 0.25f, 0.2f));
+        b.enrageAt = 0.5f; b.echoes = 300;
     }
 
     void Update()
     {
         if (SliceInput.Restart()) SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         enemies = FindObjectsByType<SliceEnemy>(FindObjectsSortMode.None);
+        bool clear = true;
+        foreach (var e in enemies) if (e && e.Alive) clear = false;
+        if (clear && wave == 1 && player && player.Combat.Health > 0f) SpawnBeast();
     }
 
     void OnGUI()
@@ -68,10 +96,11 @@ public class SliceBootstrap : MonoBehaviour
         GUI.Label(new Rect(20, 56, 300, 22), $"Blood vials: {player.vials}  [F]");
         foreach (var e in enemies)
             if (e && e.Alive) { Bar(new Rect(Screen.width / 2 - 200, Screen.height - 40, 400, 14), e.Health / e.Max, new Color(0.6f, 0.15f, 0.15f), 0, Color.clear); break; }
+        GUI.Label(new Rect(20, 98, 300, 22), $"Blood echoes: {SliceEnemy.Echoes}   Wave {wave}/2");
         GUI.Label(new Rect(20, 76, 600, 22), "WASD move | LMB attack | RMB pistol | Space quickstep | F vial | Q lock-on | R restart");
         var cr = new Rect(0, 0, Screen.width, Screen.height);
         if (c.Health <= 0f) { big.normal.textColor = new Color(0.8f, 0.1f, 0.1f); GUI.Label(cr, "YOU DIED\nR to restart", big); }
-        else if (enemies.Length == 0) { big.normal.textColor = new Color(0.9f, 0.8f, 0.3f); GUI.Label(cr, "PREY SLAUGHTERED", big); }
+        else if (wave == 2 && enemies.Length == 0) { big.normal.textColor = new Color(0.9f, 0.8f, 0.3f); GUI.Label(cr, "PREY SLAUGHTERED", big); }
     }
 
     // Health fills from the left; the rally pool is drawn right after it.
