@@ -1,9 +1,9 @@
 ---
-name: bloodline
+name: bloodborn
 description: Use when asked where code came from, why a line, function, or file looks the way it does, who introduced a bug, or what its ancestry is across renames, moves, and refactors
 ---
 
-# Bloodline
+# Bloodborn
 
 ## Overview
 Trace a symbol's full ancestry through git, following renames and moves, until the originating commit and each mutation are known. Report facts from history; never infer from current code alone.
